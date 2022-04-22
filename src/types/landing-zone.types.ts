@@ -9,6 +9,7 @@ export enum EZone {
   Z8 = 'Z8',
   Z9 = 'Z9',
   Z10 = 'Z10',
+  Z11 = 'Z11',
 }
 
 export interface ICoordinates {
