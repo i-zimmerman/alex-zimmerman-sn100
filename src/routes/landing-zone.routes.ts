@@ -44,18 +44,45 @@ router.get(
 
 // Function to update
 export const isValidLandingZone = ({ R1: arr1, R2: arr2 }: ICoordinates) => {
-  const valid: boolean[] = [];
-  for (let i = 0; i < arr2.length; i++) {
-    for (let j = 0; j < arr1.length; j++) {
-      if (arr2[i] === arr1[j]) {
-        valid.push(true);
-      }
+  const decreasingSortF = (a: number, b: number) => b - a;
+  const sortedR1 = arr1.sort(decreasingSortF);
+  const sortedR2 = arr2.sort(decreasingSortF);
+
+  let r1pointer = 0;
+  for (let i = 0; i < sortedR2.length; i++) {
+    if (sortedR2[i] > sortedR1[r1pointer]) {
+      // in this condition there will be no sortedR2[i] in R1 arr, since arrays are sorted
+      return false;
     }
+
+    if (sortedR2[i] < sortedR1[r1pointer]) {
+      // in case there are values in between that are not in R2
+      while (
+        sortedR1[r1pointer] > sortedR2[i] &&
+        r1pointer < sortedR1.length - 1
+      ) {
+        r1pointer++;
+      }
+
+      // worst case if all nums in r1 are greater then the current num in r2
+      // see Z11 for reference
+      if (
+        r1pointer === sortedR1.length - 1 &&
+        sortedR1[r1pointer] > sortedR2[i]
+      ) {
+        return false;
+      }
+
+      // same as first if statement
+      if (sortedR2[i] > sortedR1[r1pointer]) {
+        return false;
+      }
+      r1pointer--;
+    }
+    r1pointer++;
   }
-  if (valid.length === arr2.length) {
-    return true;
-  }
-  return false;
+
+  return true;
 };
 
 export default router;
