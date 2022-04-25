@@ -40,6 +40,13 @@ const findShortestPath = (
   startNode: string,
   endNode: string,
 ) => {
+  if (!Object.values(paths[startNode]).length) {
+    return {
+      distance: 0,
+      path: 'There is no valid paths that you can take to leave this point. You are stuck.',
+    };
+  }
+
   // track distances from the start node using a hash object
   let distances: Record<string, number> = {};
   distances[endNode] = Infinity;
@@ -86,9 +93,13 @@ const findShortestPath = (
   const shortestPath = [endNode];
   let parent = parents[endNode];
   while (parent) {
+    if (parent === startNode) {
+      break;
+    }
     shortestPath.push(parent);
     parent = parents[parent];
   }
+  shortestPath.push(startNode);
   shortestPath.reverse();
 
   //this is the shortest path
